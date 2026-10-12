@@ -3,6 +3,7 @@ langchain
 langchain-groq
 python-multipart
 sse-starlette
+uvicorn[standard]
 
 llama-index-core
 llama-index-vector-stores-qdrant

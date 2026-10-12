@@ -48,7 +48,8 @@ def build_query_engine(similarity_top_k: int = 4) -> RetrieverQueryEngine:
     llm = Ollama(
         model=settings.LLM_MODEL,
         base_url=settings.OLLAMA_BASE_URL,
-        request_timeout=120.0
+        request_timeout=120.0,
+        context_window=2048
     )
 
     synthesizer = get_response_synthesizer(llm=llm, streaming=True)
