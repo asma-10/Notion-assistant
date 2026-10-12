@@ -1,0 +1,14 @@
+fastapi
+langchain
+langchain-groq
+python-multipart
+sse-starlette
+
+llama-index-core
+llama-index-vector-stores-qdrant
+llama-index-llms-ollama
+llama-index-embeddings-ollama
+
+qdrant-client
+pydantic-settings
+python-dotenv
