@@ -13,3 +13,8 @@ llama-index-embeddings-ollama
 qdrant-client
 pydantic-settings
 python-dotenv
+
+llama-index-vector-stores-supabase
+llama-index-embeddings-ollama 
+
+psycopg[binary]

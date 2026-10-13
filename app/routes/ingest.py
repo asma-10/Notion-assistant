@@ -1,8 +1,9 @@
 import os
 import tempfile
+import shutil
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
-
+from fastapi.concurrency import run_in_threadpool
 from app.ingestion import ingest_documents
 from app.schemas import IngestResponse
 
@@ -36,7 +37,7 @@ async def ingest_files(files: list[UploadFile] = File(...)):
                 f.write(content)
             saved_paths.append(dest)
 
-        result = ingest_documents(saved_paths)
+        result = await run_in_threadpool(ingest_documents, saved_paths)
 
         return IngestResponse(
             message="Ingestion complete",
@@ -45,7 +46,4 @@ async def ingest_files(files: list[UploadFile] = File(...)):
         )
 
     finally:
-        # Always clean up temp files, even if ingestion fails
-        for path in saved_paths:
-            if os.path.exists(path):
-                os.remove(path)
+        shutil.rmtree(tmp_dir, ignore_errors=True)
