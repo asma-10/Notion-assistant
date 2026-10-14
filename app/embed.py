@@ -1,6 +1,6 @@
 from llama_index.embeddings.ollama import OllamaEmbedding
 
-from app.config import settings
+from config.config import settings
 
 
 def get_embed_model() -> OllamaEmbedding:

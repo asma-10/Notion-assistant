@@ -8,11 +8,38 @@ from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.llms.ollama import Ollama
 from llama_index.vector_stores.supabase import SupabaseVectorStore
 
-from app.config import settings
+from config.config import settings
 from app.embed import get_embed_model
+
+from llama_index.core.llms import ChatMessage, MessageRole
+from llama_index.core.prompts import ChatPromptTemplate
+
+from config.prompt_loader import load_system_prompt  # adjust path
+
 
 """ User question  →  Embed with Ollama  →  Similarity search in Supabase (pgvector)  →  Top-K chunks  →  Ollama LLM synthesizes answer """
 
+
+def build_qa_prompt(version: str | None = None) -> ChatPromptTemplate:
+    return ChatPromptTemplate(
+        message_templates=[
+            ChatMessage(
+                role=MessageRole.SYSTEM,
+                content=load_system_prompt(version),
+            ),
+            ChatMessage(
+                role=MessageRole.USER,
+                content=(
+                    "Context information:\n"
+                    "---------------------\n"
+                    "{context_str}\n"
+                    "---------------------\n"
+                    "Question: {query_str}\n"
+                    "Answer:"
+                ),
+            ),
+        ]
+    )
 
 @lru_cache(maxsize=4)
 def build_query_engine(similarity_top_k: int = 4) -> RetrieverQueryEngine:
@@ -49,7 +76,8 @@ def build_query_engine(similarity_top_k: int = 4) -> RetrieverQueryEngine:
         context_window=2048,
     )
 
-    synthesizer = get_response_synthesizer(llm=llm, streaming=True)
+    synthesizer = get_response_synthesizer(llm=llm, streaming=True, text_qa_template=build_qa_prompt()
+)
 
     return RetrieverQueryEngine(
         retriever=retriever,

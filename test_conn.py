@@ -1,5 +1,5 @@
 # test_conn.py
-from app.config import settings
+from config.config import settings
 print("Scheme:", settings.SUPABASE_URL.split("://")[0])   # must print: postgresql
 
 from app.ingestion import get_vector_store

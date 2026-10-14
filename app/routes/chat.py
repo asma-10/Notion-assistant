@@ -41,6 +41,10 @@ async def chat_stream(request: QueryRequest):
 async def chat(request: QueryRequest):
     try:
         engine = build_query_engine(similarity_top_k=request.top_k)
+        prompts = engine.get_prompts()
+        for key, value in prompts.items():
+            print(key)
+        print("the prompt should be here", prompts["response_synthesizer:text_qa_template"])
         response = engine.query(request.question)
 
         sources = list({

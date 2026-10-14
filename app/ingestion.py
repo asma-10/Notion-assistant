@@ -4,7 +4,7 @@ from llama_index.core import SimpleDirectoryReader, StorageContext, VectorStoreI
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.vector_stores.supabase import SupabaseVectorStore
 
-from app.config import settings
+from config.config import settings
 from app.embed import get_embed_model
 
 
