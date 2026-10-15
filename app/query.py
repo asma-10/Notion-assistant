@@ -42,7 +42,7 @@ def build_qa_prompt(version: str | None = None) -> ChatPromptTemplate:
     )
 
 @lru_cache(maxsize=4)
-def build_query_engine(similarity_top_k: int = 4) -> RetrieverQueryEngine:
+def build_query_engine(similarity_top_k: int = 2) -> RetrieverQueryEngine:
     """
     Build a query engine that:
     - Connects to the existing Supabase collection (no re-indexing)

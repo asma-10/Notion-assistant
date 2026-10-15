@@ -17,4 +17,6 @@ python-dotenv
 llama-index-vector-stores-supabase
 llama-index-embeddings-ollama 
 
+llama-index-readers-notion
+
 psycopg[binary]

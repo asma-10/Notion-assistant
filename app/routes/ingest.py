@@ -6,6 +6,7 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from app.ingestion import ingest_documents
 from app.schemas import IngestResponse
+from app.ingestion import ingest_notion
 
 router = APIRouter()
 
@@ -47,3 +48,18 @@ async def ingest_files(files: list[UploadFile] = File(...)):
 
     finally:
         shutil.rmtree(tmp_dir, ignore_errors=True)
+
+@router.post("/notion", response_model=IngestResponse)
+async def ingest_from_notion():
+    """Pull all configured Notion pages and index them."""
+    result = await run_in_threadpool(ingest_notion)
+    if result["nodes_ingested"] == 0:
+        raise HTTPException(
+            status_code=404,
+            detail="No Notion content found. Check the token, the IDs, and that the pages are shared with the integration.",
+        )
+    return IngestResponse(
+        message="Notion sync complete",
+        node_ingested=result["nodes_ingested"],
+        files=result["files"],
+    )
